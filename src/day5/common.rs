@@ -38,12 +38,12 @@ impl Display for Day5Error {
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub(crate) struct BoadingPass {
     code: String,
-    position: (u16, u16),
-    id: u16
+    position: (u32, u32),
+    id: u32
 }
 
 impl BoadingPass {
-    pub fn get_id(&self) -> u16 {
+    pub fn get_id(&self) -> u32 {
         self.id.clone()
     }
 }
@@ -64,75 +64,45 @@ impl TryFrom<String> for BoadingPass {
     type Error = Day5Error;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
-        let (mut i, mut row, mut col) : (u16, (u16, u16), (u16, u16)) = (0, (0, 127), (0, 7));
-        let mut chars = value.chars().into_iter();
-        let rowRes: u16 = loop {
-            let char = chars.next().unwrap_or('\0');
-            i += 1;
-            if i < 7 {
-                let step = ((row.1 - row.0) / 2) + 1;
-                match char {
-                    'B' => row.0 += step,
-                    'F' => row.1 -= step,
-                    _ => return Err(Self::Error {
-                        kind: Day5ErrorKind::Test,
-                        message: "".to_string()
-                    })
-                }
-            } else if i == 7 {
-                match char {
-                    'B' => {
-                        break row.1;
-                    },
-                    'F' => {
-                        break row.0;
-                    },
-                    _ => {} /*return Err(Self::Error {
-                        kind: Day5ErrorKind::Test,
-                        message: "".to_string()
-                    })*/
-                }
-                break 0;
+        let first_half = value[..7].to_string();
+        let second_half = value[7..].to_string();
+
+        let f_mask = 0b01000110;
+        let r_mask = 0b01010010;
+
+        let (mut first, mut second) = ([0; 7], [0; 3]);
+        let (mut i, mut j) = (0, 0);
+
+        for char in first_half.chars() {
+            let v = u32::from(char);
+            if (v & f_mask) != f_mask {
+                first[i] = 1;
             }
-        };
-        let colRes: u16 = loop {
-            let char = chars.next().unwrap_or('\0');
             i += 1;
-            if i < 10 {
-                let step = ((col.1 - col.0) / 2) + 1;
-                match char {
-                    'R' => col.0 += step,
-                    'L' => col.1 -= step,
-                    _ => return Err(Self::Error {
-                        kind: Day5ErrorKind::Test,
-                        message: "".to_string()
-                    })
-                }
-            } else if i == 10 {
-                match char {
-                    'R' => {
-                        break col.1;
-                    },
-                    'L' => {
-                        break col.0;
-                    },
-                    _ => return Err(Self::Error {
-                        kind: Day5ErrorKind::Test,
-                        message: "".to_string()
-                    })
-                }
-                break 0;
+        }
+
+        for char in second_half.chars() {
+            let v = u32::from(char);
+            if (v & r_mask) == r_mask {
+                second[j] = 1;
             }
-        };
+            j += 1;
+        }
+
+        let first = to_u32(&first);
+        let second = to_u32(&second);
 
         Ok(Self {
             code: value,
-            position: (rowRes, colRes),
-            id: (rowRes * 8 + colRes)
+            position: (first, second),
+            id: ((first * 8) + second)
         })
     }
 }
 
+fn to_u32(chain: &[u8]) -> u32 {
+    chain.iter().fold(0, |acc, &b| acc*2 + b as u32)
+}
 
 pub(crate) fn parse_test() -> Vec<BoadingPass> {
     parse_file(TEST)
