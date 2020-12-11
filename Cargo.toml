@@ -12,6 +12,11 @@ day4 = ["regex"]
 [dependencies]
 regex = { version = "1.4.2", optional = true }
 
+[lib]
+name = "adventOfCode2020"
+path = "src/lib.rs"
+required-features = ["day4"]
+
 [[bin]]
 name = "day1"
 
