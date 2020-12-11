@@ -1,0 +1,22 @@
+[package]
+name = "AOC2020"
+version = "0.1.0"
+authors = ["Benjamin Petit <petit.benjamin.jean@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[[bin]]
+name = "day1"
+
+[[bin]]
+name = "day2"
+
+[[bin]]
+name = "day3"
+
+[[bin]]
+name = "day4"
+
