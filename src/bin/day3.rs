@@ -69,10 +69,10 @@ fn parse_file(file: &str) -> Map {
         Ok(file) => file,
     };
 
-    let lines = BufReader::new(file).lines();
+    let file = BufReader::new(file).lines();
 
     let mut rows = Vec::<Vec<bool>>::new();
-    for line in lines {
+    for line in file {
         let mut row = Vec::<bool>::new();
         match line {
             Ok(line) => {

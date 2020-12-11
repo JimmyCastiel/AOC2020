@@ -93,9 +93,9 @@ fn parse_file(file: &str) -> Vec<Matcher> {
         Ok(file) => file,
     };
 
-    let lines = BufReader::new(file).lines();
+    let file = BufReader::new(file).lines();
     let mut matchers = Vec::<Matcher>::new();
-    for line in lines {
+    for line in file {
         match line {
             Ok(line) => {
                 let m = line.parse::<Matcher>();

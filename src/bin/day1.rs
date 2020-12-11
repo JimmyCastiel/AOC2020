@@ -23,10 +23,10 @@ fn parse_file(path: &str) -> Vec<u128> {
         Ok(file) => file,
     };
 
-    let lines = BufReader::new(file).lines();
+    let file = BufReader::new(file).lines();
 
     let mut values = Vec::<u128>::new();
-    for line in lines {
+    for line in file {
         let value: u128 = line.unwrap_or("".to_string()).parse::<u128>().unwrap_or(u128::MAX);
         if value != u128::MAX {
             values.push(value);

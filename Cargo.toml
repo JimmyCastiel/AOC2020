@@ -1,12 +1,16 @@
 [package]
-name = "AOC2020"
+name = "adventOfCode2020"
 version = "0.1.0"
-authors = ["Benjamin Petit <petit.benjamin.jean@gmail.com>"]
+authors = ["Benjamin Petit <https://www.linkedin.com/in/beni-petit"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+day4 = ["regex"]
+
 [dependencies]
+regex = { version = "1.4.2", optional = true }
 
 [[bin]]
 name = "day1"
@@ -19,4 +23,4 @@ name = "day3"
 
 [[bin]]
 name = "day4"
-
+required-features = ["day4"]
