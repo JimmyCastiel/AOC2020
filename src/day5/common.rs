@@ -67,30 +67,21 @@ impl TryFrom<String> for BoadingPass {
         let first_half = value[..7].to_string();
         let second_half = value[7..].to_string();
 
-        let f_mask = 0b01000110;
-        let r_mask = 0b01010010;
-
-        let (mut first, mut second) = ([0; 7], [0; 3]);
-        let (mut i, mut j) = (0, 0);
-
-        for char in first_half.chars() {
-            let v = u32::from(char);
-            if (v & f_mask) != f_mask {
-                first[i] = 1;
+        let first = first_half.chars().fold(0, | acc, c |{
+            acc * 2 + if c != 'F' {
+                1
+            } else {
+                0
             }
-            i += 1;
-        }
+        });
 
-        for char in second_half.chars() {
-            let v = u32::from(char);
-            if (v & r_mask) == r_mask {
-                second[j] = 1;
+        let second = second_half.chars().fold(0, | acc, c |{
+            acc * 2 + if c != 'L' {
+                1
+            } else {
+                0
             }
-            j += 1;
-        }
-
-        let first = to_u32(&first);
-        let second = to_u32(&second);
+        });
 
         Ok(Self {
             code: value,
@@ -98,10 +89,6 @@ impl TryFrom<String> for BoadingPass {
             id: ((first * 8) + second)
         })
     }
-}
-
-fn to_u32(chain: &[u8]) -> u32 {
-    chain.iter().fold(0, |acc, &b| acc*2 + b as u32)
 }
 
 pub(crate) fn parse_test() -> Vec<BoadingPass> {

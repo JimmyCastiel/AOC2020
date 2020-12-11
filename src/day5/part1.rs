@@ -2,12 +2,14 @@ use crate::day5::common::{parse_test, parse_final};
 
 pub fn exo() -> u32 {
     let boardingPasses = parse_final();
-    let mut max = 0;
-    for boardingpass in boardingPasses {
-        let id = boardingpass.get_id();
-        if id > max {
-            max = id;
+    if !boardingPasses.is_empty() {
+        let mut max = boardingPasses.first().unwrap().to_owned();
+        for boardingpass in boardingPasses {
+            if boardingpass > max {
+                max = boardingpass;
+            }
         }
+        return max.get_id()
     }
-    max
+    0
 }
