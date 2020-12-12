@@ -32,3 +32,6 @@ required-features = ["day4"]
 
 [[bin]]
 name = "day5"
+
+[[bin]]
+name = "day6"
