@@ -6,6 +6,8 @@ use std::fmt::{Display, Formatter};
 use std::collections::HashMap;
 
 pub(crate) const FINAL: &str = "./inputs/exo6_final_input.txt";
+
+#[cfg(test)]
 pub(crate) const TEST: &str = "./inputs/exo6_test_input.txt";
 
 #[derive(Debug, Clone)]
@@ -15,7 +17,7 @@ pub enum Day6ErrorKind {
 
 impl Display for Day6ErrorKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let mut msg = "";
+        let msg;
         match self {
             Self::Test => msg = "test",
         }
@@ -36,17 +38,17 @@ impl Display for Day6Error {
 }
 
 #[derive(Debug, Clone)]
-pub(crate) struct VotingGroup {
+pub struct VotingGroup {
     voters: u16,
     scores: HashMap<char, u16>,
 }
 
 impl VotingGroup {
-    pub(crate) fn nb_q_anyone_answered_yes(&self) -> u16 {
+    pub fn nb_q_anyone_answered_yes(&self) -> u16 {
         self.scores.keys().len() as u16
     }
 
-    pub(crate) fn nb_q_everyone_answered_yes(&self) -> u16 {
+    pub fn nb_q_everyone_answered_yes(&self) -> u16 {
         self.scores.keys().fold(0, | acc, c | {
             acc + if *self.scores.get(c).unwrap_or(&0) == self.voters {
                 1
@@ -70,12 +72,10 @@ impl TryFrom<String> for VotingGroup {
                     match char {
                         '\n' => voters += 1,
                         c => {
-                            match scores.get(&c) {
-                                Some(s) => scores.insert(c, s + 1),
-                                None => scores.insert(c, 1)
-                            };
+                            let s = *scores.get(&c).unwrap_or(&0);
+
+                            scores.insert(c, s + 1);
                         },
-                        _ => {}
                     }
                 },
                 None => break
@@ -88,11 +88,10 @@ impl TryFrom<String> for VotingGroup {
     }
 }
 
-pub(crate) fn parse_test() -> Vec<VotingGroup> {
-    parse_file(TEST)
-}
+#[cfg(test)]
+pub(crate) fn parse_test() -> Vec<VotingGroup> { parse_file(TEST) }
 
-pub(crate) fn parse_final() -> Vec<VotingGroup> {
+pub fn parse_final() -> Vec<VotingGroup> {
     parse_file(FINAL)
 }
 
@@ -105,7 +104,7 @@ fn parse_file(path: &str) -> Vec<VotingGroup> {
         Ok(file) => file,
     };
 
-    let mut file = BufReader::new(file).lines();
+    let file = BufReader::new(file).lines();
 
     let mut voting_groups = Vec::<VotingGroup>::new();
     let mut entry: String = String::new();
@@ -134,13 +133,6 @@ fn parse_file(path: &str) -> Vec<VotingGroup> {
             voting_groups.push(vg.unwrap());
         }
     }
-
-    /*for line in file {
-        let vg = line.unwrap_or("".to_string()).try_into();
-        if vg.is_ok() {
-            voting_groups.push(vg.unwrap());
-        }
-    }*/
 
     voting_groups
 }

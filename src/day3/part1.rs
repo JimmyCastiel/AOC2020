@@ -1,7 +1,6 @@
-use crate::day3::common::parse_final;
+use crate::day3::Map;
 
-pub fn exo() -> u16 {
-    let map = parse_final();
+pub fn exo(map: Map) -> u16 {
 
     let (trees, _) = map.grow_part1();
 

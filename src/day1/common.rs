@@ -1,16 +1,18 @@
 use std::fs::File;
 use std::path::Path;
 use std::io::{BufRead, BufReader};
-use std::str::FromStr;
 
 const FINAL: &str = "./inputs/exo1_final_input.txt";
+
+#[cfg(test)]
 const TEST: &str = "./inputs/exo1_test_input.txt";
 
+#[cfg(test)]
 pub(crate) fn parse_test() -> Vec<u64> {
     parse_file(TEST)
 }
 
-pub(crate) fn parse_final() -> Vec<u64> {
+pub fn parse_final() -> Vec<u64> {
     parse_file(FINAL)
 }
 

@@ -1,12 +1,13 @@
 use std::fs::File;
 use std::path::Path;
 use std::io::{BufRead, BufReader};
-use std::str::FromStr;
 
 const FINAL: &str = "./inputs/exo3_final_input.txt";
+
+#[cfg(test)]
 const TEST: &str = "./inputs/exo3_test_input.txt";
 
-pub(crate) struct Map {
+pub struct Map {
     height: usize,
     width: usize,
     rows: Vec<Vec<bool>>
@@ -37,11 +38,11 @@ impl Map {
         (trees, empty)
     }
 
-    pub(crate) fn grow_part1(&self) -> (u16, u16) {
+    pub fn grow_part1(&self) -> (u16, u16) {
         self.grow(3,1)
     }
 
-    pub(crate) fn grow_part2(&self) -> Vec<(u16, u16)> {
+    pub fn grow_part2(&self) -> Vec<(u16, u16)> {
         let mut res = Vec::<(u16, u16)>::new();
         res.push(self.grow(1,1));
         res.push(self.grow(3,1));
@@ -52,13 +53,10 @@ impl Map {
     }
 }
 
-pub(crate) fn parse_test() -> Map {
-    parse_file(TEST)
-}
+#[cfg(test)]
+pub(crate) fn parse_test() -> Map { parse_file(TEST) }
 
-pub(crate) fn parse_final() -> Map {
-    parse_file(FINAL)
-}
+pub fn parse_final() -> Map { parse_file(FINAL) }
 
 fn parse_file(file: &str) -> Map {
     let path = Path::new(file);

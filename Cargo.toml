@@ -7,7 +7,12 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
+day1 = []
+day2 = []
+day3 = []
 day4 = ["regex"]
+day5 = []
+day6 = []
 
 [dependencies]
 regex = { version = "1.4.2", optional = true }
@@ -15,16 +20,18 @@ regex = { version = "1.4.2", optional = true }
 [lib]
 name = "adventOfCode2020"
 path = "src/lib.rs"
-required-features = ["day4"]
 
 [[bin]]
 name = "day1"
+required-features = ["day2"]
 
 [[bin]]
 name = "day2"
+required-features = ["day2"]
 
 [[bin]]
 name = "day3"
+required-features = ["day3"]
 
 [[bin]]
 name = "day4"
@@ -32,6 +39,8 @@ required-features = ["day4"]
 
 [[bin]]
 name = "day5"
+required-features = ["day5"]
 
 [[bin]]
 name = "day6"
+required-features = ["day6"]

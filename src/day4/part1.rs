@@ -1,4 +1,7 @@
-use crate::day4::common::{TEST_P1, FINAL_P1};
+#[cfg(test)]
+use crate::day4::common::TEST_P1;
+
+use crate::day4::common::FINAL_P1;
 
 use std::path::Path;
 use std::fs::File;
@@ -7,12 +10,12 @@ use std::collections::HashMap;
 use std::str::FromStr;
 
 #[derive(Debug)]
-enum Error {
+pub enum Error {
     Parse,
 }
 
 #[derive(Debug)]
-struct PassportP1 {
+pub struct Passport {
     byr: u128,
     iyr: u128,
     eyr: u128,
@@ -23,7 +26,7 @@ struct PassportP1 {
     cid: u128,
 }
 
-impl PassportP1 {
+impl Passport {
     fn parse_file(file: &str) -> Vec<Self> {
         let path = Path::new(file);
         let display = path.display();
@@ -69,7 +72,7 @@ impl PassportP1 {
     }
 }
 
-impl FromStr for PassportP1 {
+impl FromStr for Passport {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -101,7 +104,7 @@ impl FromStr for PassportP1 {
                         map.get("pid").unwrap().to_string(),
                         map.get("cid").unwrap().parse::<u128>().unwrap()
             );
-            Ok(PassportP1 {
+            Ok(Passport {
                 byr,
                 iyr,
                 eyr,
@@ -126,7 +129,7 @@ impl FromStr for PassportP1 {
                         map.get("ecl").unwrap().to_string(),
                         map.get("pid").unwrap().to_string(),
             );
-            Ok(PassportP1 {
+            Ok(Passport {
                 byr,
                 iyr,
                 eyr,
@@ -142,16 +145,13 @@ impl FromStr for PassportP1 {
     }
 }
 
-fn parse_test_p1() -> Vec<PassportP1> {
-    PassportP1::parse_file(TEST_P1)
+#[cfg(test)]
+pub(crate) fn parse_test() -> Vec<Passport> { Passport::parse_file(TEST_P1) }
+
+pub fn parse_final() -> Vec<Passport> {
+    Passport::parse_file (FINAL_P1)
 }
 
-fn parse_final_p1() -> Vec<PassportP1> {
-    PassportP1::parse_file (FINAL_P1)
-}
-
-pub fn exo() -> u64{
-    let passports = parse_final_p1();
-
+pub fn exo(passports: Vec<Passport>) -> u64{
     passports.len() as u64
 }

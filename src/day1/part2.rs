@@ -1,6 +1,4 @@
-use crate::day1::common::parse_final;
-
-fn check3Sum(start: u64, mark: u64, values: Vec<u64>, sum: u64) -> Option<u64>{
+fn check_sum_of_3(start: u64, mark: u64, values: Vec<u64>, sum: u64) -> Option<u64>{
     for val in values.clone() {
         if start + mark + val == sum {
             return Some(start * mark * val);
@@ -9,10 +7,9 @@ fn check3Sum(start: u64, mark: u64, values: Vec<u64>, sum: u64) -> Option<u64>{
     return None;
 }
 
-pub fn exo() -> u64{
-    let values = parse_final();
-
+pub fn exo(values: Vec<u64>) -> u64{
     let mut vals = values.clone();
+
     loop {
         if vals.is_empty() {
             break;
@@ -22,7 +19,7 @@ pub fn exo() -> u64{
             break;
         }
         for val in vals.clone() {
-            match check3Sum(start, val, vals.clone(), 2020) {
+            match check_sum_of_3(start, val, vals.clone(), 2020) {
                 Some(res) => {
                     return res;
                 },

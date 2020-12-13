@@ -1,4 +1,8 @@
-use crate::day4::common::{TEST_P2, FINAL_P2};
+#[cfg(test)]
+use crate::day4::common::TEST_P2;
+
+use crate::day4::common::FINAL_P2;
+
 use regex::Regex;
 
 use std::collections::HashMap;
@@ -11,41 +15,40 @@ use std::str::FromStr;
 use std::error::Error;
 
 #[derive(Debug, Clone)]
-enum P2ErrorKind {
+enum Day4ErrorKind {
     Parse,
     HeightParse,
     ParseU16
 }
 
-impl Display for P2ErrorKind {
+impl Display for Day4ErrorKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
-        let mut msg: &str= "";
+        let msg;
         match self {
             Self::Parse => msg = "Generic parse type",
             Self::HeightParse => msg = "Cannot parse height",
             Self::ParseU16 => msg = "Cannot parse integer",
-            &_ => {}
         }
         write!(f, "{}", msg)
     }
 }
 
 #[derive(Debug, Clone)]
-pub struct P2Error {
-    kind: P2ErrorKind,
+pub struct Dat4Error {
+    kind: Day4ErrorKind,
     message: String
 }
 
-impl Display for P2Error {
+impl Display for Dat4Error {
     fn fmt(&self, f: &mut Formatter<'_>) -> FmtResult {
         write!(f, "Error {}", self.kind)
     }
 }
 
-impl From<std::num::ParseIntError> for P2Error {
+impl From<std::num::ParseIntError> for Dat4Error {
     fn from(e: std::num::ParseIntError) -> Self {
         Self {
-            kind: P2ErrorKind::ParseU16,
+            kind: Day4ErrorKind::ParseU16,
             message: e.to_string()
         }
     }
@@ -58,14 +61,14 @@ enum HeightKind {
 }
 
 impl FromStr for HeightKind {
-    type Err = P2Error;
+    type Err = Dat4Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "cm" => Ok(Self::CM),
             "in" => Ok(Self::IN),
             &_ => Err(Self::Err {
-                kind: P2ErrorKind::HeightParse,
+                kind: Day4ErrorKind::HeightParse,
                 message: "cannot parse height type".to_string()
             })
         }
@@ -88,13 +91,13 @@ impl Height {
 }
 
 impl TryFrom<String> for Height {
-    type Error = P2Error;
+    type Error = Dat4Error;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
         let reg = Regex::new(r"^(?P<height>\d{1,3})(?P<type>cm|in)$").unwrap();
 
         let err_captures: Self::Error = Self::Error {
-            kind: P2ErrorKind::HeightParse,
+            kind: Day4ErrorKind::HeightParse,
             message: "Given String do not match expected formats".to_string()
         };
 
@@ -109,12 +112,12 @@ impl TryFrom<String> for Height {
     }
 }
 
-impl Error for P2Error {
+impl Error for Dat4Error {
 
 }
 
 #[derive(Debug)]
-struct PassportP2 {
+pub struct Passport {
     byr: u16,
     iyr: u16,
     eyr: u16,
@@ -124,7 +127,7 @@ struct PassportP2 {
     pid: String,
 }
 
-impl PassportP2 {
+impl Passport {
     fn parse_file(file: &str) -> Vec<Self> {
         let path = Path::new(file);
         let display = path.display();
@@ -169,8 +172,8 @@ impl PassportP2 {
     }
 }
 
-impl TryFrom<String> for PassportP2 {
-    type Error = P2Error;
+impl TryFrom<String> for Passport {
+    type Error = Dat4Error;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
         let parts: Vec<&str> = value.split(' ').collect();
@@ -179,7 +182,7 @@ impl TryFrom<String> for PassportP2 {
         for part in parts {
             let p: Vec<&str> = part.split(':').collect();
             if p.len() != 2 {
-                return Err(Self::Error{kind: P2ErrorKind::Parse, message: "cannot parse entry".to_string()});
+                return Err(Self::Error{kind: Day4ErrorKind::Parse, message: "cannot parse entry".to_string()});
             }
             map.insert(p[0], p[1]);
         }
@@ -216,7 +219,7 @@ impl TryFrom<String> for PassportP2 {
             && reg2.is_match(&pid.as_str()) &&
             hgt.is_valid()
         {
-            Ok(PassportP2 {
+            Ok(Passport {
                 byr,
                 iyr,
                 eyr,
@@ -226,21 +229,18 @@ impl TryFrom<String> for PassportP2 {
                 pid,
             })
         } else {
-            Err(Self::Error{kind: P2ErrorKind::Parse, message: "invalid passport".to_string()})
+            Err(Self::Error{kind: Day4ErrorKind::Parse, message: "invalid passport".to_string()})
         }
     }
 }
 
-fn parse_test_p2() -> Vec<PassportP2> {
-    PassportP2::parse_file(TEST_P2)
+#[cfg(test)]
+pub(crate) fn parse_test() -> Vec<Passport> {
+    Passport::parse_file(TEST_P2)
 }
 
-fn parse_final_p2() -> Vec<PassportP2> {
-    PassportP2::parse_file(FINAL_P2)
-}
+pub fn parse_final() -> Vec<Passport> { Passport::parse_file(FINAL_P2) }
 
-pub fn exo() -> u64{
-    let passports = parse_final_p2();
-
+pub fn exo(passports: Vec<Passport>) -> u64 {
     passports.len() as u64
 }

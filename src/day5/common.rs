@@ -6,6 +6,8 @@ use std::fmt::{Display, Formatter};
 use std::cmp::Ordering;
 
 pub(crate) const FINAL: &str = "./inputs/exo5_final_input.txt";
+
+#[cfg(test)]
 pub(crate) const TEST: &str = "./inputs/exo5_test_input.txt";
 
 #[derive(Debug, Clone)]
@@ -15,7 +17,7 @@ pub enum Day5ErrorKind {
 
 impl Display for Day5ErrorKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let mut msg = "";
+        let msg;
         match self {
             Self::Test => msg = "test",
         }
@@ -36,7 +38,7 @@ impl Display for Day5Error {
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub(crate) struct BoadingPass {
+pub struct BoadingPass {
     code: String,
     position: (u32, u32),
     id: u32
@@ -91,13 +93,12 @@ impl TryFrom<String> for BoadingPass {
     }
 }
 
+#[cfg(test)]
 pub(crate) fn parse_test() -> Vec<BoadingPass> {
     parse_file(TEST)
 }
 
-pub(crate) fn parse_final() -> Vec<BoadingPass> {
-    parse_file(FINAL)
-}
+pub fn parse_final() -> Vec<BoadingPass> { parse_file(FINAL) }
 
 fn parse_file(path: &str) -> Vec<BoadingPass> {
     let path = Path::new(path);
@@ -110,13 +111,13 @@ fn parse_file(path: &str) -> Vec<BoadingPass> {
 
     let file = BufReader::new(file).lines();
 
-    let mut boardingPasses = Vec::<BoadingPass>::new();
+    let mut boarding_passes = Vec::<BoadingPass>::new();
     for line in file {
         let bp = line.unwrap_or("".to_string()).try_into();
         if bp.is_ok() {
-            boardingPasses.push(bp.unwrap());
+            boarding_passes.push(bp.unwrap());
         }
     }
 
-    boardingPasses
+    boarding_passes
 }

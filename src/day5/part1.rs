@@ -1,15 +1,15 @@
-use crate::day5::common::{parse_test, parse_final};
+use crate::day5::common::BoadingPass;
 
-pub fn exo() -> u32 {
-    let boardingPasses = parse_final();
-    if !boardingPasses.is_empty() {
-        let mut max = boardingPasses.first().unwrap().to_owned();
-        for boardingpass in boardingPasses {
+pub fn exo(boarding_passes: Vec<BoadingPass>) -> u32 {
+    if !boarding_passes.is_empty() {
+        let mut max = boarding_passes.first().unwrap().to_owned();
+        for boardingpass in boarding_passes {
             if boardingpass > max {
                 max = boardingpass;
             }
         }
         return max.get_id()
     }
+
     0
 }

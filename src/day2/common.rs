@@ -4,6 +4,8 @@ use std::io::{BufRead, BufReader};
 use std::str::FromStr;
 
 const FINAL: &str = "./inputs/exo2_final_input.txt";
+
+#[cfg(test)]
 const TEST: &str = "./inputs/exo2_test_input.txt";
 
 #[derive(Debug)]
@@ -12,7 +14,7 @@ pub enum Error {
 }
 
 #[derive(Debug)]
-pub(crate) struct Matcher {
+pub struct Matcher {
     min: u8,
     max: u8,
     car: char,
@@ -76,11 +78,10 @@ impl FromStr for Matcher {
     }
 }
 
-pub(crate) fn parse_test() -> Vec<Matcher> {
-    parse_file(TEST)
-}
+#[cfg(test)]
+pub(crate) fn parse_test() -> Vec<Matcher> { parse_file(TEST) }
 
-pub(crate) fn parse_final() -> Vec<Matcher> {
+pub fn parse_final() -> Vec<Matcher> {
     parse_file(FINAL)
 }
 
@@ -94,7 +95,9 @@ fn parse_file(file: &str) -> Vec<Matcher> {
     };
 
     let file = BufReader::new(file).lines();
+
     let mut matchers = Vec::<Matcher>::new();
+
     for line in file {
         match line {
             Ok(line) => {
