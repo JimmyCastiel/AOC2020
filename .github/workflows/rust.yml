@@ -10,7 +10,7 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  build-day1:
 
     runs-on: ubuntu-latest
 
@@ -20,23 +20,70 @@ jobs:
       run: cargo build --verbose --bin day1 --features day1 --release
     - name: Run tests day1
       run: cargo test --verbose --features day1
+    - name: Run built binary day1
+      run: ./target/release/day1
+
+  build-day2:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
     - name: Build day2
       run: cargo build --verbose --bin day2 --features day2 --release
     - name: Run tests day2
       run: cargo test --verbose --features day2
+    - name: Run built binary day2
+      run: ./target/release/day2
+
+  build-day3:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
     - name: Build day3
       run: cargo build --verbose --bin day3 --features day3 --release
     - name: Run tests day3
       run: cargo test --verbose --features day3
+    - name: Run built binary day3
+      run: ./target/release/day3
+
+  build-day4:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
     - name: Build day4
       run: cargo build --verbose --bin day4 --features day4 --release
     - name: Run tests day4
       run: cargo test --verbose --features day4
+    - name: Run built binary day4
+      run: ./target/release/day4
+
+  build-day5:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
     - name: Build day5
       run: cargo build --verbose --bin day5 --features day5 --release
     - name: Run tests day5
       run: cargo test --verbose --features day5
+    - name: Run built binary day5
+      run: ./target/release/day5
+
+  build-day6:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
     - name: Build day6
       run: cargo build --verbose --bin day6 --features day6 --release
     - name: Run tests day6
       run: cargo test --verbose --features day6
+    - name: Run built binary day6
+      run: ./target/release/day6
