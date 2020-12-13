@@ -1,0 +1,30 @@
+name: Rust
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build day1
+      run: cargo build --verbose --features day1 --release
+    - name: Run tests day1
+      run: cargo test --verbose --features day1
+    - name: Build day2
+      run: cargo build --verbose --features day2 --release
+    - name: Run tests day2
+      run: cargo test --verbose --features day2
+    - name: Build day3
+      run: cargo build --verbose --features day3 --release
+    - name: Run tests day3
+      run: cargo test --verbose --features day3
