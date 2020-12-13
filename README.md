@@ -1,5 +1,7 @@
 # adventOfCode2020
 
+![Rust](https://github.com/JimmyCastiel/adventOfCode2020/workflows/Rust/badge.svg)
+
 adventOfCode2020 is a rust participation to [Advent Of Code 2020](https://adventofcode.com/2020) event.
 
 ## Installation
