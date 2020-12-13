@@ -23,7 +23,7 @@ path = "src/lib.rs"
 
 [[bin]]
 name = "day1"
-required-features = ["day2"]
+required-features = ["day1"]
 
 [[bin]]
 name = "day2"
