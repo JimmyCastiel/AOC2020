@@ -80,6 +80,7 @@ impl TryFrom<String> for Instruction {
 
 pub struct Program {
     instructions: Vec<Instruction>,
+    infinite_loop: bool,
     acc: i16,
 }
 
@@ -88,32 +89,68 @@ impl Program {
         self.acc.clone()
     }
 
+    pub fn reset(&mut self) {
+        self.infinite_loop = false;
+        self.acc = 0;
+    }
+
     pub fn run(&mut self) {
-        let mut ptr: i16 = 0;
-        let mut history: Vec<i16> = Vec::new();
+        let (mut ptr, mut ptr_history) : (usize, Vec<usize>) = (0, Vec::new());
         loop {
-            if history.contains(&ptr) {
+            if ptr >= self.instructions.len() {
                 break
             }
-            let instruction: &Instruction = &self.instructions[ptr as usize];
-            match instruction.kind {
+            if ptr_history.contains(&ptr) {
+                self.infinite_loop = true;
+                break
+            }
+            ptr_history.push(ptr.clone());
+            match self.instructions[ptr as usize].kind {
                 InstructionKind::NOP => {},
                 InstructionKind::JMP => {
-                    history.push(ptr.clone());
-                    ptr += instruction.value;
+                    ptr = (ptr as i16 + self.instructions[ptr].value) as usize;
                     continue
                 }
                 InstructionKind::ACC => {
-                    self.acc += instruction.value;
+                    self.acc += self.instructions[ptr as usize].value;
                 },
             }
-            history.push(ptr.clone());
+            ptr += 1;
+        }
+    }
+
+    pub fn run_auto_fix(&mut self) {
+        let mut ptr: usize = 0;
+        loop {
+            if ptr >= self.instructions.len() {
+                break;
+            }
+            match self.instructions[ptr].kind {
+                InstructionKind::NOP => {
+                    self.instructions[ptr].kind = InstructionKind::JMP;
+                    self.run();
+                    if !self.infinite_loop {
+                        break
+                    }
+                    self.instructions[ptr].kind = InstructionKind::NOP;
+                },
+                InstructionKind::JMP => {
+                    self.instructions[ptr].kind = InstructionKind::NOP;
+                    self.run();
+                    if !self.infinite_loop {
+                        break
+                    }
+                    self.instructions[ptr].kind = InstructionKind::JMP;
+                }
+                _ => {}
+            }
+            self.reset();
             ptr += 1;
         }
     }
 }
 
-impl<'a> TryFrom<String> for Program {
+impl TryFrom<String> for Program {
     type Error = Day8Error;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
@@ -127,7 +164,8 @@ impl<'a> TryFrom<String> for Program {
         Ok(
             Self {
                 instructions,
-                acc: 0
+                infinite_loop: false,
+                acc: 0,
             }
         )
     }
