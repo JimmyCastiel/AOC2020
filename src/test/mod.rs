@@ -14,3 +14,5 @@ mod day6;
 mod day7;
 #[cfg(feature = "day8")]
 mod day8;
+#[cfg(feature = "day9")]
+mod day9;
