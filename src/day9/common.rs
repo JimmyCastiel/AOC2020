@@ -2,7 +2,6 @@ use std::path::Path;
 use std::fs::File;
 use std::io::{BufReader, BufRead};
 use std::fmt::{Display, Formatter};
-use std::collections::VecDeque;
 
 pub(crate) const FINAL: &str = "./inputs/exo9_final_input.txt";
 
@@ -38,12 +37,69 @@ impl Display for Day9Error {
     }
 }
 
+pub struct Serie {
+    numbers: Vec<u64>
+}
+
+impl Serie {
+    pub fn get_weakness_number(&self, depth: usize) -> u64 {
+        let mut idx: usize = 0;
+        loop {
+            let mut sums = Vec::new();
+            if idx >= self.numbers.len() {
+                break
+            }
+            if idx >= depth {
+                for num in &self.numbers[(idx - depth)..idx] {
+                    for n in &self.numbers[(idx - depth)..idx] {
+                        let sum = num + n;
+                        if !sums.contains(&sum) {
+                            sums.push(sum);
+                        }
+                    }
+                }
+                if !sums.contains(&self.numbers[idx]) {
+                    return *(&self.numbers[idx]);
+                }
+            }
+            idx += 1;
+        }
+        0
+    }
+
+    pub fn get_weakness_serie(&self, depth: usize) -> Vec<u64> {
+        let weakness: u64 = self.get_weakness_number(depth);
+        let mut idx: usize = 0;
+        let mut found: bool = false;
+        loop {
+            let mut j: usize = idx + 1;
+            if idx >= (self.numbers.len() - 1) {
+                break
+            }
+            loop {
+                if j >= (self.numbers.len() - 1) {
+                    break
+                }
+                let sum: u64 = self.numbers[idx..=j].iter().sum();
+                if sum == weakness {
+                    found = true;
+                } else if found {
+                    return self.numbers[idx..j].to_vec();
+                }
+                j += 1;
+            }
+            idx += 1;
+        }
+        Vec::new()
+    }
+}
+
 #[cfg(test)]
-pub(crate) fn parse_test() -> Result<u64, Day9Error> { parse_file(TEST, 5) }
+pub(crate) fn parse_test() -> Result<Serie, Day9Error> { parse_file(TEST) }
 
-pub fn parse_final() -> Result<u64, Day9Error> { parse_file(FINAL, 25) }
+pub fn parse_final() -> Result<Serie, Day9Error> { parse_file(FINAL) }
 
-fn parse_file(path: &str, depth: usize) -> Result<u64, Day9Error> {
+fn parse_file(path: &str) -> Result<Serie, Day9Error> {
     let path = Path::new(path);
     let display = path.display();
 
@@ -53,35 +109,17 @@ fn parse_file(path: &str, depth: usize) -> Result<u64, Day9Error> {
     };
 
     let file = BufReader::new(file).lines();
-    let mut numbers = VecDeque::new();
-    let mut idx: usize = 0;
+    let mut numbers = Vec::new();
 
     for line in file {
-        if numbers.len() > depth {
-            numbers.pop_back();
-        }
         match line {
             Ok(line) => {
-                let mut sums = Vec::new();
                 let number = line.as_str().parse::<u64>().unwrap_or(0);
-                for num in &numbers {
-                    for n in &numbers {
-                        let sum = num + n;
-                        if !sums.contains(&sum) {
-                            sums.push(sum);
-                        }
-
-                    }
-                }
-                numbers.push_front(number);
-                if idx > (depth - 1) && !sums.contains(&number) {
-                    return Ok(number);
-                }
+                numbers.push(number);
             },
             _ => {}
         }
-        idx += 1;
     }
 
-    Ok(0)
+    Ok(Serie { numbers })
 }
