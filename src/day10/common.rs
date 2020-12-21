@@ -46,8 +46,9 @@ impl Serie {
     pub fn get_differences(&mut self) -> HashMap<u64, u64> {
         let mut idx: usize = 0;
         let mut res = HashMap::new();
+        self.numbers.push(0);
         self.numbers.sort();
-        res.insert(self.numbers[idx], res.get(&self.numbers[idx]).unwrap_or(&0) + 1);
+        self.numbers.push(self.numbers[self.numbers.len() - 1] + 3);
         loop {
             if (idx + 1) >= self.numbers.len(){
                 break
@@ -56,8 +57,31 @@ impl Serie {
             res.insert(diff, res.get(&diff).unwrap_or(&0) + 1);
             idx += 1;
         }
-        res.insert(3, res.get(&3).unwrap_or(&0) + 1);
         res
+    }
+
+    pub fn get_combinations(&mut self) -> u64 {
+        let mut idx: usize = 0;
+        self.numbers.push(0);
+        self.numbers.sort();
+        self.numbers.push(self.numbers[self.numbers.len() - 1] + 3);
+        let mut branches: Vec<u64> = vec![0; self.numbers.len()];
+        branches[0] = 1;
+        loop {
+            if idx >= self.numbers.len() {
+                break
+            }
+            let mut j: usize = 1;
+            loop {
+                if j > 3 || idx < j || self.numbers[idx] - self.numbers[idx - j] > 3 {
+                    break
+                }
+                branches[idx] += branches[idx - j];
+                j += 1;
+            }
+            idx += 1;
+        }
+        branches[branches.len()-1]
     }
 }
 
