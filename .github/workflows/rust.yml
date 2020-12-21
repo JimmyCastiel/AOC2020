@@ -100,3 +100,13 @@ jobs:
       run: cargo test --verbose --features day9
     - name: Run built binary day9
       run: ./target/release/day9
+  build-day10:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build day10
+      run: cargo build --verbose --bin day10 --features day10 --release
+    - name: Run tests day10
+      run: cargo test --verbose --features day9
+    - name: Run built binary day10
+      run: ./target/release/day10

@@ -16,6 +16,7 @@ day6 = []
 day7 = []
 day8 = []
 day9 = []
+day10 = []
 
 [dependencies]
 regex = { version = "1.4.2", optional = true }
@@ -59,3 +60,7 @@ required-features = ["day8"]
 [[bin]]
 name = "day9"
 required-features = ["day9"]
+
+[[bin]]
+name = "day10"
+required-features = ["day10"]
